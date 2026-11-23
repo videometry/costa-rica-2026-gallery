@@ -574,6 +574,13 @@
         document.getElementById('appContent').style.display = 'block';
         await initUnlockedApp();
       } catch (e) {
+        if (window.location.protocol === 'file:') {
+          err.innerHTML = 'Opened as a local <code>file://</code> path (browsers block WebCrypto decryption on <code>file://</code>). <a href="http://127.0.0.1:8765/" style="color:#6ee7b7;text-decoration:underline;font-weight:800;">Click here to open http://127.0.0.1:8765/ →</a> (or on GitHub Pages HTTPS it works automatically!)';
+        } else if (e && e.message === 'BAD_PASSWORD') {
+          err.textContent = 'Incorrect password — please try again!';
+        } else {
+          err.textContent = `Could not load encrypted assets (${e && e.message ? e.message : 'network error'}).`;
+        }
         err.style.display = 'block';
         btn.disabled = false;
         btn.textContent = 'Unlock Gallery & Films →';
